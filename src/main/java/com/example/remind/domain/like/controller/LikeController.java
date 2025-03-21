@@ -12,15 +12,18 @@ import org.springframework.web.bind.annotation.*;
 public class LikeController {
 
     private final LikeService likeService;
-
     @PostMapping("/{contentId}")
-    public ResponseEntity<String> toggleLike(@PathVariable Long contentId, @RequestParam LikeType likeType, @RequestParam Long userId) {
+    public ResponseEntity<String> toggleLike(@PathVariable Long contentId,
+                                             @RequestParam LikeType likeType,
+                                             @RequestParam Long userId) {
         return likeService.toggleLike(userId, contentId, likeType);
     }
-
     @GetMapping("/{contentId}/count")
-    public int getLikeCount(@PathVariable Long contentId, @RequestParam LikeType likeType) {
-        return likeService.getLikeCount(contentId, likeType);
+    public ResponseEntity<Integer> getLikeCount(@PathVariable Long contentId,
+                                                @RequestParam LikeType likeType) {
+        int likeCount = likeService.getLikeCount(contentId, likeType);
+        return ResponseEntity.ok(likeCount);
     }
 }
+
 

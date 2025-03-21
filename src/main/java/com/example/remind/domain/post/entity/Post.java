@@ -35,6 +35,9 @@ public class Post {
     private LocalDateTime createdAt = LocalDateTime.now();
     private LocalDateTime updatedAt = LocalDateTime.now();
 
+    @Column(nullable = false)
+    private int likeCount = 0;
+
     public Post(User author, String title, String content, String body) {
         this.author = author;
         this.title = title;
@@ -54,7 +57,16 @@ public class Post {
         this.content = content;
         this.updatedAt = LocalDateTime.now();
     }
+
+    public void increaseLikeCount() {
+        this.likeCount++;
+    }
+
+    public void decreaseLikeCount() {
+        if (this.likeCount > 0) this.likeCount--;
+    }
 }
+
 
 
 

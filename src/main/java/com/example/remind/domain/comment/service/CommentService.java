@@ -1,6 +1,7 @@
 package com.example.remind.domain.comment.service;
 
 import com.example.remind.domain.comment.dto.CommentRequestDto;
+import com.example.remind.domain.comment.dto.CommentResponseDto;
 import com.example.remind.domain.comment.entity.Comment;
 import com.example.remind.domain.comment.repository.CommentRepository;
 import com.example.remind.domain.post.entity.Post;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -22,25 +24,29 @@ public class CommentService {
     private final UserRepository userRepository;
 
     @Transactional
-    public Comment createComment(Long userId, Long postId, CommentRequestDto requestDto) {
+    public CommentResponseDto createComment(Long userId, Long postId, CommentRequestDto requestDto) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("게시물을 찾을 수 없습니다."));
 
         Comment comment = new Comment(post, user, requestDto.getContent());
-        return commentRepository.save(comment);
+        commentRepository.save(comment);
+
+        return new CommentResponseDto(comment);
     }
 
     @Transactional(readOnly = true)
-    public List<Comment> getComments(Long postId) {
-        Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new IllegalArgumentException("게시물을 찾을 수 없습니다."));
-        return commentRepository.findByPost(post);
+    public List<CommentResponseDto> getComments(Long postId) {
+        List<Comment> comments = commentRepository.findByPostId(postId);
+        return comments.stream()
+                .map(CommentResponseDto::new)
+                .collect(Collectors.toList());
     }
 
     @Transactional
-    public Comment updateComment(Long userId, Long commentId, CommentRequestDto requestDto) {
+    public CommentResponseDto updateComment(Long userId, Long commentId, CommentRequestDto requestDto) {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new IllegalArgumentException("댓글을 찾을 수 없습니다."));
 
@@ -49,7 +55,9 @@ public class CommentService {
         }
 
         comment.updateContent(requestDto.getContent());
-        return comment;
+        commentRepository.save(comment);
+
+        return new CommentResponseDto(comment);
     }
 
     @Transactional
@@ -64,4 +72,8 @@ public class CommentService {
         commentRepository.delete(comment);
     }
 }
+
+
+
+
 

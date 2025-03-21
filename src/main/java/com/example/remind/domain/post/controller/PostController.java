@@ -34,13 +34,19 @@ public class PostController {
         return postService.deletePost(userId, postId);
     }
 
-    @GetMapping("/{userId}/feed")
-    public Page<Post> getFeed(@PathVariable Long userId,
-                              @RequestParam(defaultValue = "0") int page,
-                              @RequestParam(defaultValue = "10") int size) {
-        return postService.getNewsFeed(userId, page, size);
+    @GetMapping("/search")
+    public Page<Post> searchPosts(
+            @RequestParam(required = false) String sort,
+            @RequestParam(required = false) String startDate,
+            @RequestParam(required = false) String endDate,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        return postService.searchPosts(sort, startDate, endDate, page, size);
     }
 }
+
+
 
 
 

@@ -28,11 +28,11 @@ public class LikeService {
 
         if (existingLike.isPresent()) {
             likeRepository.delete(existingLike.get());
-            return ResponseEntity.ok("좋아요 취소됨");
+            return ResponseEntity.ok("좋아요가 취소되었습니다.");
         } else {
             Like like = new Like(user, contentId, likeType);
             likeRepository.save(like);
-            return ResponseEntity.ok("좋아요 추가됨");
+            return ResponseEntity.ok("좋아요가 추가되었습니다.");
         }
     }
 
@@ -41,4 +41,5 @@ public class LikeService {
         return likeRepository.countByContentIdAndLikeType(contentId, likeType);
     }
 }
+
 

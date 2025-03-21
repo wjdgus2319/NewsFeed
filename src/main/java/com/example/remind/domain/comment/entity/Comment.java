@@ -2,6 +2,7 @@ package com.example.remind.domain.comment.entity;
 
 import com.example.remind.domain.post.entity.Post;
 import com.example.remind.domain.user.entity.User;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,6 +24,7 @@ public class Comment {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private User author;
 
     @Column(nullable = false)
@@ -42,3 +44,4 @@ public class Comment {
         this.updatedAt = LocalDateTime.now();
     }
 }
+
