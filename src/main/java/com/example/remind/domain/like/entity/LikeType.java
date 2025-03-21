@@ -1,4 +1,6 @@
 package com.example.remind.domain.like.entity;
 
-public class LikeType {
+public enum LikeType {
+    POST, COMMENT
 }
+
